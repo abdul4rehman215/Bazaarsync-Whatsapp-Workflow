@@ -91,21 +91,21 @@ Full test evidence — 5 manual API test screenshots plus 3 real-WhatsApp-flow s
 ```
 bazaarsync-whatsapp-workflow/
 ├── app/
-│   ├── main.py          # FastAPI app, middleware, startup
-│   ├── config.py         # env-driven settings
-│   ├── logger.py          # structured JSON logging
-│   ├── database.py        # SQLAlchemy engine/session
+│   ├── main.py             # FastAPI app, middleware, startup
+│   ├── config.py           # env-driven settings
+│   ├── logger.py           # structured JSON logging
+│   ├── database.py         # SQLAlchemy engine/session
 │   ├── models.py           # Transaction ORM model
 │   ├── schemas.py          # Pydantic request/response/LLM-output schemas
 │   ├── llm_parser.py       # Claude prompt + JSON validation + fallback
 │   ├── service.py          # shared ingest pipeline (webhook + /parse both use this)
 │   ├── webhook.py          # POST /webhook/whatsapp (Twilio)
 │   └── api.py              # /parse, /transactions, /health
-├── tests/                 # pytest suite (offline, LLM mocked)
-├── docs/architecture.md   # architecture diagram + explanation
+├── tests/                  # pytest suite (offline, LLM mocked)
+├── docs/architecture.md    # architecture diagram + explanation
 ├── requirements.txt
 ├── Dockerfile
-├── docker-compose.yml     # app + Postgres
+├── docker-compose.yml      # app + Postgres
 └── .env.example
 ```
 

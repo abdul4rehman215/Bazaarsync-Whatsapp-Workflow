@@ -27,13 +27,13 @@ Output: {
   "theme": "base",
   "themeVariables": {
     "background": "#050814",
-    "fontSize": "27px",
+    "fontSize": "32px",
     "primaryTextColor": "#ffffff",
     "lineColor": "#f8fafc"
   },
   "flowchart": {
-    "nodeSpacing": 48,
-    "rankSpacing": 58,
+    "nodeSpacing": 42,
+    "rankSpacing": 52,
     "curve": "basis"
   }
 }}%%
@@ -68,7 +68,7 @@ flowchart LR
 
         D["⚙️ ingest_message()"]
 
-        E["✨ Claude Parser<br/>Anthropic API<br/>Strict JSON Output"]
+        E["✨ Claude Parser<br/>Anthropic API<br/>Strict JSON"]
 
         F["🧾 Pydantic Validation<br/>ParsedPurchase Schema"]
 
@@ -77,14 +77,14 @@ flowchart LR
 
 
     %% =====================================================
-    %% 3 · VALIDATION + STATUS
+    %% 3 · VALIDATION
     %% =====================================================
     subgraph VALIDATE[" "]
         direction TB
 
         H3["🧪 3 · VALIDATION"]
 
-        G{"🔎 Confidence +<br/>Completeness Check"}
+        G{"🔎 Confidence +<br/>Completeness"}
 
         H["✅ PARSED<br/>Confidence ≥ 0.6<br/>Item Found"]
 
@@ -110,11 +110,11 @@ flowchart LR
 
         K[("💾 Transactions DB<br/>SQLite / Postgres")]
 
-        L["📋 Structured JSON Logs<br/>request_id Correlated"]
+        L["📋 Structured JSON Logs<br/>Correlated Request ID"]
 
         M["🧑‍💻 API Client<br/>curl · Postman · Dashboard"]
 
-        N["🌐 FastAPI API<br/>GET /transactions<br/>POST /parse · GET /health"]
+        N["🌐 FastAPI API<br/>Transactions · Parse · Health"]
 
         M ==> N
         N ==> K
@@ -122,10 +122,9 @@ flowchart LR
 
 
     %% =====================================================
-    %% MAIN CROSS-STAGE FLOW
+    %% CROSS-STAGE FLOW
     %% =====================================================
     C ==> D
-
     F ==> G
 
     H ==> K
@@ -136,15 +135,15 @@ flowchart LR
 
 
     %% =====================================================
-    %% PREMIUM HEADER STYLES
+    %% LARGE GLOSSY HEADERS
     %% =====================================================
-    classDef intakeHeader fill:#172554,stroke:#60a5fa,stroke-width:5px,color:#ffffff,font-size:30px;
+    classDef intakeHeader fill:#172554,stroke:#60a5fa,stroke-width:7px,color:#ffffff,font-size:35px;
 
-    classDef parseHeader fill:#4c1d95,stroke:#c084fc,stroke-width:5px,color:#ffffff,font-size:30px;
+    classDef parseHeader fill:#4c1d95,stroke:#c084fc,stroke-width:7px,color:#ffffff,font-size:35px;
 
-    classDef validateHeader fill:#713f12,stroke:#fbbf24,stroke-width:5px,color:#ffffff,font-size:30px;
+    classDef validateHeader fill:#713f12,stroke:#fbbf24,stroke-width:7px,color:#ffffff,font-size:35px;
 
-    classDef dataHeader fill:#14532d,stroke:#4ade80,stroke-width:5px,color:#ffffff,font-size:30px;
+    classDef dataHeader fill:#14532d,stroke:#4ade80,stroke-width:7px,color:#ffffff,font-size:35px;
 
     class H1 intakeHeader;
     class H2 parseHeader;
@@ -153,13 +152,13 @@ flowchart LR
 
 
     %% =====================================================
-    %% INTAKE COLORS
+    %% WHATSAPP INTAKE
     %% =====================================================
-    classDef user fill:#172554,stroke:#60a5fa,stroke-width:5px,color:#ffffff,font-size:27px;
+    classDef user fill:#172554,stroke:#60a5fa,stroke-width:6px,color:#ffffff,font-size:32px;
 
-    classDef whatsapp fill:#075985,stroke:#22d3ee,stroke-width:5px,color:#ffffff,font-size:27px;
+    classDef whatsapp fill:#075985,stroke:#22d3ee,stroke-width:6px,color:#ffffff,font-size:32px;
 
-    classDef webhook fill:#0c4a6e,stroke:#38bdf8,stroke-width:5px,color:#ffffff,font-size:26px;
+    classDef webhook fill:#0c4a6e,stroke:#38bdf8,stroke-width:6px,color:#ffffff,font-size:31px;
 
     class A user;
     class B whatsapp;
@@ -167,13 +166,13 @@ flowchart LR
 
 
     %% =====================================================
-    %% AI PARSING COLORS
+    %% AI PARSING
     %% =====================================================
-    classDef service fill:#312e81,stroke:#818cf8,stroke-width:5px,color:#ffffff,font-size:27px;
+    classDef service fill:#312e81,stroke:#818cf8,stroke-width:6px,color:#ffffff,font-size:32px;
 
-    classDef claude fill:#581c87,stroke:#e879f9,stroke-width:5px,color:#ffffff,font-size:27px;
+    classDef claude fill:#581c87,stroke:#e879f9,stroke-width:6px,color:#ffffff,font-size:32px;
 
-    classDef schema fill:#4338ca,stroke:#a5b4fc,stroke-width:5px,color:#ffffff,font-size:27px;
+    classDef schema fill:#4338ca,stroke:#a5b4fc,stroke-width:6px,color:#ffffff,font-size:31px;
 
     class D service;
     class E claude;
@@ -181,15 +180,15 @@ flowchart LR
 
 
     %% =====================================================
-    %% VALIDATION COLORS
+    %% VALIDATION
     %% =====================================================
-    classDef decision fill:#1f2937,stroke:#f8fafc,stroke-width:5px,color:#ffffff,font-size:27px;
+    classDef decision fill:#1f2937,stroke:#f8fafc,stroke-width:6px,color:#ffffff,font-size:32px;
 
-    classDef parsed fill:#14532d,stroke:#4ade80,stroke-width:5px,color:#ffffff,font-size:26px;
+    classDef parsed fill:#14532d,stroke:#4ade80,stroke-width:6px,color:#ffffff,font-size:31px;
 
-    classDef review fill:#713f12,stroke:#facc15,stroke-width:5px,color:#ffffff,font-size:26px;
+    classDef review fill:#713f12,stroke:#facc15,stroke-width:6px,color:#ffffff,font-size:31px;
 
-    classDef failed fill:#7f1d1d,stroke:#fb7185,stroke-width:5px,color:#ffffff,font-size:26px;
+    classDef failed fill:#7f1d1d,stroke:#fb7185,stroke-width:6px,color:#ffffff,font-size:31px;
 
     class G decision;
     class H parsed;
@@ -198,15 +197,15 @@ flowchart LR
 
 
     %% =====================================================
-    %% DATA + API COLORS
+    %% DATA + API
     %% =====================================================
-    classDef database fill:#065f46,stroke:#4ade80,stroke-width:6px,color:#ffffff,font-size:28px;
+    classDef database fill:#065f46,stroke:#4ade80,stroke-width:7px,color:#ffffff,font-size:32px;
 
-    classDef logs fill:#134e4a,stroke:#2dd4bf,stroke-width:4px,color:#ffffff,font-size:25px;
+    classDef logs fill:#134e4a,stroke:#2dd4bf,stroke-width:6px,color:#ffffff,font-size:30px;
 
-    classDef client fill:#7c2d12,stroke:#fb923c,stroke-width:4px,color:#ffffff,font-size:26px;
+    classDef client fill:#7c2d12,stroke:#fb923c,stroke-width:6px,color:#ffffff,font-size:31px;
 
-    classDef api fill:#0c4a6e,stroke:#38bdf8,stroke-width:5px,color:#ffffff,font-size:26px;
+    classDef api fill:#0c4a6e,stroke:#38bdf8,stroke-width:6px,color:#ffffff,font-size:31px;
 
     class K database;
     class L logs;
@@ -215,18 +214,18 @@ flowchart LR
 
 
     %% =====================================================
-    %% GLOSSY CONTAINER PANELS
+    %% PREMIUM GLOSSY PANELS
     %% =====================================================
-    style INTAKE fill:#07121f,stroke:#60a5fa,stroke-width:3px
-    style PARSE fill:#160b25,stroke:#c084fc,stroke-width:3px
-    style VALIDATE fill:#181007,stroke:#fbbf24,stroke-width:3px
-    style DATA fill:#07140e,stroke:#4ade80,stroke-width:3px
+    style INTAKE fill:#07121f,stroke:#60a5fa,stroke-width:4px
+    style PARSE fill:#160b25,stroke:#c084fc,stroke-width:4px
+    style VALIDATE fill:#181007,stroke:#fbbf24,stroke-width:4px
+    style DATA fill:#07140e,stroke:#4ade80,stroke-width:4px
 
 
     %% =====================================================
-    %% BRIGHT CONNECTORS
+    %% THICK BRIGHT CONNECTORS
     %% =====================================================
-    linkStyle default stroke:#f8fafc,stroke-width:5px;
+    linkStyle default stroke:#f8fafc,stroke-width:6px;
 ```
 
 ### Step-by-step flow

@@ -23,23 +23,210 @@ Output: {
 ## Architecture
 
 ```mermaid
-flowchart TD
-    A["Shopkeeper's WhatsApp<br/>'Ramesh bought 2kg Sugar'"] -->|inbound message| B["Twilio WhatsApp Sandbox<br/>(or Meta Cloud API in prod)"]
-    B -->|"POST /webhook/whatsapp<br/>(From, Body)"| C["FastAPI: webhook.py"]
-    C --> D["service.ingest_message()"]
-    D --> E["llm_parser.py<br/>Claude (Anthropic API)"]
-    E -->|"strict JSON contract"| F["schemas.ParsedPurchase<br/>(Pydantic validation)"]
-    F --> G{"confidence &<br/>completeness check"}
-    G -->|">= 0.6, has item"| H["status = parsed"]
-    G -->|"partial match"| I["status = needs_review"]
-    G -->|"no match / LLM error"| J["status = failed"]
-    H --> K[("SQLite / Postgres<br/>transactions table")]
-    I --> K
-    J --> K
-    D --> L["Structured JSON logs<br/>(request_id correlated)"]
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#050814",
+    "fontSize": "27px",
+    "primaryTextColor": "#ffffff",
+    "lineColor": "#f8fafc"
+  },
+  "flowchart": {
+    "nodeSpacing": 48,
+    "rankSpacing": 58,
+    "curve": "basis"
+  }
+}}%%
 
-    M["Any client (curl, Postman,<br/>internal dashboard)"] -->|"GET /transactions<br/>GET /transactions/{id}<br/>POST /parse<br/>GET /health"| N["FastAPI: api.py"]
-    N --> K
+flowchart LR
+
+    %% =====================================================
+    %% 1 · WHATSAPP INTAKE
+    %% =====================================================
+    subgraph INTAKE[" "]
+        direction TB
+
+        H1["📱 1 · WHATSAPP INTAKE"]
+
+        A["👤 Shopkeeper<br/>Ramesh bought 2kg Sugar"]
+
+        B["💬 Twilio WhatsApp<br/>Sandbox / Meta Cloud"]
+
+        C["⚡ FastAPI Webhook<br/>POST /webhook/whatsapp<br/>From · Body"]
+
+        H1 ==> A ==> B ==> C
+    end
+
+
+    %% =====================================================
+    %% 2 · AI PARSING
+    %% =====================================================
+    subgraph PARSE[" "]
+        direction TB
+
+        H2["🧠 2 · AI PARSING"]
+
+        D["⚙️ ingest_message()"]
+
+        E["✨ Claude Parser<br/>Anthropic API<br/>Strict JSON Output"]
+
+        F["🧾 Pydantic Validation<br/>ParsedPurchase Schema"]
+
+        H2 ==> D ==> E ==> F
+    end
+
+
+    %% =====================================================
+    %% 3 · VALIDATION + STATUS
+    %% =====================================================
+    subgraph VALIDATE[" "]
+        direction TB
+
+        H3["🧪 3 · VALIDATION"]
+
+        G{"🔎 Confidence +<br/>Completeness Check"}
+
+        H["✅ PARSED<br/>Confidence ≥ 0.6<br/>Item Found"]
+
+        I["⚠️ NEEDS REVIEW<br/>Partial Match"]
+
+        J["❌ FAILED<br/>No Match / LLM Error"]
+
+        H3 ==> G
+
+        G ==> H
+        G ==> I
+        G ==> J
+    end
+
+
+    %% =====================================================
+    %% 4 · DATA + API
+    %% =====================================================
+    subgraph DATA[" "]
+        direction TB
+
+        H4["🗃️ 4 · DATA + API"]
+
+        K[("💾 Transactions DB<br/>SQLite / Postgres")]
+
+        L["📋 Structured JSON Logs<br/>request_id Correlated"]
+
+        M["🧑‍💻 API Client<br/>curl · Postman · Dashboard"]
+
+        N["🌐 FastAPI API<br/>GET /transactions<br/>POST /parse · GET /health"]
+
+        M ==> N
+        N ==> K
+    end
+
+
+    %% =====================================================
+    %% MAIN CROSS-STAGE FLOW
+    %% =====================================================
+    C ==> D
+
+    F ==> G
+
+    H ==> K
+    I ==> K
+    J ==> K
+
+    D -.-> L
+
+
+    %% =====================================================
+    %% PREMIUM HEADER STYLES
+    %% =====================================================
+    classDef intakeHeader fill:#172554,stroke:#60a5fa,stroke-width:5px,color:#ffffff,font-size:30px;
+
+    classDef parseHeader fill:#4c1d95,stroke:#c084fc,stroke-width:5px,color:#ffffff,font-size:30px;
+
+    classDef validateHeader fill:#713f12,stroke:#fbbf24,stroke-width:5px,color:#ffffff,font-size:30px;
+
+    classDef dataHeader fill:#14532d,stroke:#4ade80,stroke-width:5px,color:#ffffff,font-size:30px;
+
+    class H1 intakeHeader;
+    class H2 parseHeader;
+    class H3 validateHeader;
+    class H4 dataHeader;
+
+
+    %% =====================================================
+    %% INTAKE COLORS
+    %% =====================================================
+    classDef user fill:#172554,stroke:#60a5fa,stroke-width:5px,color:#ffffff,font-size:27px;
+
+    classDef whatsapp fill:#075985,stroke:#22d3ee,stroke-width:5px,color:#ffffff,font-size:27px;
+
+    classDef webhook fill:#0c4a6e,stroke:#38bdf8,stroke-width:5px,color:#ffffff,font-size:26px;
+
+    class A user;
+    class B whatsapp;
+    class C webhook;
+
+
+    %% =====================================================
+    %% AI PARSING COLORS
+    %% =====================================================
+    classDef service fill:#312e81,stroke:#818cf8,stroke-width:5px,color:#ffffff,font-size:27px;
+
+    classDef claude fill:#581c87,stroke:#e879f9,stroke-width:5px,color:#ffffff,font-size:27px;
+
+    classDef schema fill:#4338ca,stroke:#a5b4fc,stroke-width:5px,color:#ffffff,font-size:27px;
+
+    class D service;
+    class E claude;
+    class F schema;
+
+
+    %% =====================================================
+    %% VALIDATION COLORS
+    %% =====================================================
+    classDef decision fill:#1f2937,stroke:#f8fafc,stroke-width:5px,color:#ffffff,font-size:27px;
+
+    classDef parsed fill:#14532d,stroke:#4ade80,stroke-width:5px,color:#ffffff,font-size:26px;
+
+    classDef review fill:#713f12,stroke:#facc15,stroke-width:5px,color:#ffffff,font-size:26px;
+
+    classDef failed fill:#7f1d1d,stroke:#fb7185,stroke-width:5px,color:#ffffff,font-size:26px;
+
+    class G decision;
+    class H parsed;
+    class I review;
+    class J failed;
+
+
+    %% =====================================================
+    %% DATA + API COLORS
+    %% =====================================================
+    classDef database fill:#065f46,stroke:#4ade80,stroke-width:6px,color:#ffffff,font-size:28px;
+
+    classDef logs fill:#134e4a,stroke:#2dd4bf,stroke-width:4px,color:#ffffff,font-size:25px;
+
+    classDef client fill:#7c2d12,stroke:#fb923c,stroke-width:4px,color:#ffffff,font-size:26px;
+
+    classDef api fill:#0c4a6e,stroke:#38bdf8,stroke-width:5px,color:#ffffff,font-size:26px;
+
+    class K database;
+    class L logs;
+    class M client;
+    class N api;
+
+
+    %% =====================================================
+    %% GLOSSY CONTAINER PANELS
+    %% =====================================================
+    style INTAKE fill:#07121f,stroke:#60a5fa,stroke-width:3px
+    style PARSE fill:#160b25,stroke:#c084fc,stroke-width:3px
+    style VALIDATE fill:#181007,stroke:#fbbf24,stroke-width:3px
+    style DATA fill:#07140e,stroke:#4ade80,stroke-width:3px
+
+
+    %% =====================================================
+    %% BRIGHT CONNECTORS
+    %% =====================================================
+    linkStyle default stroke:#f8fafc,stroke-width:5px;
 ```
 
 ### Step-by-step flow
